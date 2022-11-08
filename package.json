@@ -1,0 +1,20 @@
+{
+  "name": "nexa-forest-server-side",
+  "version": "1.0.0",
+  "description": "This is the server of Nexa Forest Website",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Md. Arif Uddin Raihan",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongobd": "^0.0.1-security.0",
+    "mongodb": "^4.11.0"
+  }
+}
