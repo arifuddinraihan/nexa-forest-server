@@ -43,10 +43,21 @@ async function run() {
             res.send(result)
         })
         app.get('/reviews', async (req, res) => {
-            const query = {}
-            const cursor = reviewCollection.find(query).sort({ "reviewTime": -1, "_id": 1 })
+            let query = {}
+            if(req.query.email){
+                query = {
+                    email : req.query.email
+                }
+            }
+            const cursor = reviewCollection.find(query).sort({ "_id": -1 })
             const allReviews = await cursor.toArray()
             res.send(allReviews)
+        })
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query)
+            res.send(result)
         })
     }
     finally {
