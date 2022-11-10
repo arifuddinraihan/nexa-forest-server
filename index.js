@@ -37,6 +37,7 @@ async function run() {
         const serviceCollection = client.db('nexaForestDB').collection('services')
         const reviewCollection = client.db('nexaForestDB').collection('reviews')
         const blogCollection = client.db('nexaForestDB').collection('blogs')
+        const newsLetterUserCollection = client.db('nexaForestDB').collection('newsLetterUser')
         //    console.log(serviceCollection)
 
         app.post('/jwt', (req, res) => {
@@ -81,9 +82,9 @@ async function run() {
                 res.status(403).send({ message: "unauthorized access" })
             }
             let query = {}
-            if(req.query.email){
+            if (req.query.email) {
                 query = {
-                    email : req.query.email
+                    email: req.query.email
                 }
             }
             const cursor = reviewCollection.find(query).sort({ "_id": -1 })
@@ -92,12 +93,12 @@ async function run() {
         })
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id
-            const query = { service : id}
+            const query = { service: id }
             const cursor = reviewCollection.find(query)
             const reviewPerService = await cursor.toArray()
             res.send(reviewPerService)
         })
-        app.patch('/reviews/:id',  async (req, res) => {
+        app.patch('/reviews/:id', async (req, res) => {
             const id = req.params.id
             const updatedReview = req.body?.updatedReview
             const updatedRating = req.body?.updatedRating
@@ -109,20 +110,25 @@ async function run() {
                     rating: updatedRating
                 },
             };
-            const result = await reviewCollection.updateOne(query , updateDoc)
+            const result = await reviewCollection.updateOne(query, updateDoc)
             res.send(result)
         })
-        app.delete('/reviews/:id',  async (req, res) => {
+        app.delete('/reviews/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) };
             const result = await reviewCollection.deleteOne(query)
             res.send(result)
         })
-        app.get('/blogs' , async (req , res) => {
+        app.get('/blogs', async (req, res) => {
             const query = {}
             const cursor = blogCollection.find(query)
             const blogs = await cursor.toArray()
             res.send(blogs)
+        })
+        app.post('/newsletter-users', async (req, res) => {
+            const email = req.body;
+            const result = await newsLetterUserCollection.insertOne(email)
+            res.send(result)
         })
     }
     finally {
