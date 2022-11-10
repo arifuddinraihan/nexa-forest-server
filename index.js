@@ -36,6 +36,7 @@ async function run() {
     try {
         const serviceCollection = client.db('nexaForestDB').collection('services')
         const reviewCollection = client.db('nexaForestDB').collection('reviews')
+        const blogCollection = client.db('nexaForestDB').collection('blogs')
         //    console.log(serviceCollection)
 
         app.post('/jwt', (req, res) => {
@@ -116,6 +117,12 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const result = await reviewCollection.deleteOne(query)
             res.send(result)
+        })
+        app.get('/blogs' , async (req , res) => {
+            const query = {}
+            const cursor = blogCollection.find(query)
+            const blogs = await cursor.toArray()
+            res.send(blogs)
         })
     }
     finally {
