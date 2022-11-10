@@ -25,6 +25,12 @@ async function run() {
             const services = await cursor.limit(3).toArray()
             res.send(services)
         })
+        app.post('/services', async (req, res) => {
+            const newService = req.body
+            console.log(newService)
+            const result = await serviceCollection.insertOne(newService)
+            res.send(result)
+        })
         app.get('/all-services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query)
@@ -53,11 +59,18 @@ async function run() {
             const allReviews = await cursor.toArray()
             res.send(allReviews)
         })
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { service : id}
+            const cursor = reviewCollection.find(query)
+            const reviewPerService = await cursor.toArray()
+            res.send(reviewPerService)
+        })
         app.patch('/reviews/:id', async (req, res) => {
             const id = req.params.id
             const updatedReview = req.body?.updatedReview
             const updatedRating = req.body?.updatedRating
-            console.log(updatedReview, updatedRating)
+            // console.log(updatedReview, updatedRating)
             const query = { _id: ObjectId(id) };
             const updateDoc = {
                 $set: {
